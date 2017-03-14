@@ -1,41 +1,7 @@
 #ifndef SOCKET_SERVER_H
 #define SOCKET_SERVER_H
-
-#define _DEBUG_TRACE_CMH_	2  
-
-  
-#if 1==_DEBUG_TRACE_CMH_    //普通打印  
-    #define TRACE_CMH printf  
-#elif 2==_DEBUG_TRACE_CMH_  //打印文件名、行号  
-    #define TRACE_CMH(fmt,...)	printf("%s(%d): "##fmt, __FILE__, __LINE__, ##__VA_ARGS__)  
-#elif 3==_DEBUG_TRACE_CMH_  //打印文件名、行号、函数名  
-    #define TRACE_CMH(fmt,...)	printf("%s(%d)-<%s>: "##fmt, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)  
-#else  
-    #define TRACE_CMH  
-#endif //_TRACE_CMH_DEBUG_  
-/*******************************************************/  
-// #include <pthread.h>
-// typedef struct Server {
-//   int 				fd;
-//   pthread 			threadID;
-//   pthread_mutex_t 	db;
-//   pthread_cond_t  	db_update;
-// }T_Server, *PT_Servrer;
-
-#define DEBUG
-
-#ifndef DBG
-#ifdef DEBUG
-#define DBG(...) printf(__VA_ARGS__)
-#else
-#define DBG(...)
-#endif
-#endif
-
-#define OUTPUT_PLUGIN_PREFIX " o: "
-#define OPRINT(...) { char _bf[1024] = {0}; snprintf(_bf, sizeof(_bf)-1, __VA_ARGS__); fprintf(stderr, "%s", OUTPUT_PLUGIN_PREFIX); fprintf(stderr, "%s", _bf); syslog(LOG_INFO, "%s", _bf); }
-
 #define  MAX_SD_LEN   50
+
 /* store configuration for each server instance */
 typedef struct {
     int port;
@@ -54,24 +20,6 @@ typedef struct {
     config conf;
 } context;
 
-#if defined(MANAGMENT)
-/*
- * this struct is used to hold information from the clients address, and last picture take time
- */
-typedef struct _client_info {
-    struct _client_info *next;
-    char *address;
-    struct timeval last_take_time;
-} client_info;
-
-struct {
-    client_info **infos;
-    unsigned int client_count;
-    pthread_mutex_t mutex;
-} client_infos;
-
-#endif
-
 /*
  * this struct is just defined to allow passing all necessary details to a worker thread
  * "cfd" is for connected/accepted filedescriptor
@@ -79,15 +27,11 @@ struct {
 typedef struct {
     context *pc;
     int fd;
-    #ifdef MANAGMENT
-    client_info *client;
-    #endif
 } cfd;
 
-
 /* prototypes */
-int server_stop(int id);
-int server_run(int id);
+int server_stop(pthread_t threadID);
+int server_run(pthread_t *threadID);
 void *server_thread(void *arg);
 void *client_thread(void *arg);
 void server_cleanup(void *arg);

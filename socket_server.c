@@ -15,10 +15,7 @@
 #include <limits.h>
 #include "socket_server.h"
 #include "socket_driver.h"
-pthread_t threadID;
-pthread_mutex_t db;
-pthread_cond_t  db_update;
-char *out_data;
+#include "main.h"
 
 int server_init(int id)
 {
@@ -33,10 +30,10 @@ Description.: this will stop the server thread, client threads
 Input Value.: id determines which server instance to send commands to
 Return Value: always 0
 ******************************************************************************/
-int server_stop(int id)
+int server_stop(pthread_t threadID)
 {
 
-    printf("will cancel server thread #%02d\n", id);
+    printf("will cancel server thread #%02d\n", (int)threadID);
     pthread_cancel(threadID);
 
     return 0;
@@ -47,15 +44,15 @@ Description.: This creates and starts the server thread
 Input Value.: id determines which server instance to send commands to
 Return Value: always 0
 ******************************************************************************/
-int server_run(int id)
+int server_run(pthread_t *threadID)
 {
-    printf("launching server thread #%02d\n", id);
+    printf("launching server thread #%02d\n", (int)(*threadID));
     context *pcontext;
     pcontext = malloc(sizeof(context));
     pcontext->conf.port = 3333;   //temp
     /* create thread and pass context to thread function */
-    pthread_create(&threadID, NULL, server_thread, (void *)pcontext);
-    pthread_detach(threadID);
+    pthread_create(threadID, NULL, server_thread, (void *)pcontext);
+    pthread_detach(*threadID);
 
     return 0;
 }
@@ -162,34 +159,7 @@ void server_cleanup(void *arg)
       printf("this is clean function %d\n", i);
 }
 
-int main(int argc,char *argv[])
-{
-  
-  if( pthread_mutex_init(&db, NULL) != 0 )
-  /* 初始化 global.db 成员 */
-  {
-    return -1;
-  }
-  if( pthread_cond_init(&db_update, NULL) != 0 )
-  /* 初始化 global.db_update(条件变量) 成员 */
-  {
-    printf("could not initialize condition variable\n");
-    return -1;
-  }
-  server_run(1);
-  out_data = malloc(1024);
-  if (out_data ==NULL)
-  {
-    printf("malloc error\n");
-  }
 
-    while(1)
-    {
-      pthread_cond_wait(&db_update, &db);
-      printf("awake in main---------------\n");
-      printf("recieved the data is %s---------------\n",out_data);
-    }
-}
 
 // //     int on;
 // //     pthread_t client;
