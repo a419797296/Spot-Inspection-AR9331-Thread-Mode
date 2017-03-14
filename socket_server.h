@@ -54,24 +54,6 @@ typedef struct {
     config conf;
 } context;
 
-#if defined(MANAGMENT)
-/*
- * this struct is used to hold information from the clients address, and last picture take time
- */
-typedef struct _client_info {
-    struct _client_info *next;
-    char *address;
-    struct timeval last_take_time;
-} client_info;
-
-struct {
-    client_info **infos;
-    unsigned int client_count;
-    pthread_mutex_t mutex;
-} client_infos;
-
-#endif
-
 /*
  * this struct is just defined to allow passing all necessary details to a worker thread
  * "cfd" is for connected/accepted filedescriptor
@@ -79,11 +61,7 @@ struct {
 typedef struct {
     context *pc;
     int fd;
-    #ifdef MANAGMENT
-    client_info *client;
-    #endif
 } cfd;
-
 
 /* prototypes */
 int server_stop(int id);
