@@ -31,7 +31,7 @@ int check_connectiong(int test_time)
 {
   while(test_time--)
   {
-    if (!system("www.baidu.com -c 1 > nul"))
+    if (!system("ping www.baidu.com -c 1 > nul"))
     {
       return 0;    //successed
     }

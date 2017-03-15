@@ -47,8 +47,9 @@ int main(int argc,char *argv[])
     while(1)
     {
       pthread_cond_wait(&db_update, &db);
-      printf("awake in main---------------\n");
+      
       printf("recieved the data is %s---------------\n",out_data);
-
+      if(!check_connectiong(5))
+      	printf("the network is ready\n");
     }
 }
