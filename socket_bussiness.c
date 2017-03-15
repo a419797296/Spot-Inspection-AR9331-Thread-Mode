@@ -37,7 +37,7 @@ int socket_bussiness(void)
       	printf("the network is ready\n");
       else
         printf("the network is not ready\n");
-    doit(t_data_info.data,t_data_info.length);
+    doit(&t_data_info);
 
 
     }
@@ -45,10 +45,12 @@ int socket_bussiness(void)
 }
 
 //--------------------------判断是否是json格式---------
-jsonType judgeJsonType(char * receivedData, int dataLength)
+jsonType judgeJsonType(PT_Data_Info pt_data_info)
 {
     cJSON *json;
     static jsonType json_type;
+    char *receivedData = pt_data_info->data;
+    int dataLength = pt_data_info->length;
     if(*receivedData=='{')
     {
         json=cJSON_Parse(receivedData);
@@ -81,12 +83,11 @@ jsonType judgeJsonType(char * receivedData, int dataLength)
 }
 
 /* Parse text to JSON, then render back to text, and print! */
-void doit(char *receivedData, int dataLength)
+void doit(PT_Data_Info pt_data_info)
 {
 
-    jsonType jsontype;
-    jsontype=judgeJsonType(receivedData,dataLength);
-    switch(jsontype)
+    pt_data_info->type=judgeJsonType(pt_data_info);
+    switch(pt_data_info->type)
     {
     case JSON_TYPE_ERROR:
         printf("jsonType is ERROR\r\n");
@@ -121,12 +122,16 @@ void doit(char *receivedData, int dataLength)
     //     break;
     case JSON_TYPE_WIFI_CONFIG:
         printf("jsonType is JSON_TYPE_WIFI_CONFIG\r\n");
-        if (config_wifi(receivedData)==-1)
+        if (config_wifi(pt_data_info)==-1)
         {
             printf("---------------unconnect-----\n");
+            write(pt_data_info->orig_fd,"unconnect",sizeof("unconnect"));
         }
         else
             printf("---------------connect-----\n");
+            write(pt_data_info->orig_fd,"connect",sizeof("connect"));
+            client_run(&socket_client_threadID);
+
         break;
     default:
         printf("jsonType is default+\r\n");

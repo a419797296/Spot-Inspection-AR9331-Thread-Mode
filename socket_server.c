@@ -17,6 +17,13 @@
 #include "socket_driver.h"
 #include "main.h"
 
+int socket_server_fd;
+pthread_t socket_server_threadID;
+/***********local fucntion***********/
+static void *server_thread(void *arg);
+static void *client_thread(void *arg);
+static void server_cleanup(void *arg);
+
 int server_init(int id)
 {
 
@@ -57,7 +64,7 @@ int server_run(pthread_t *threadID)
     return 0;
 }
 
-void *server_thread(void *arg)
+static void *server_thread(void *arg)
 {
  int server_fd;
  pthread_t client;
@@ -109,7 +116,7 @@ Input Value.: arg is the filedescriptor and server-context of the connected TCP
 Return Value: always NULL
 ******************************************************************************/
 /* thread for clients that connected to this server */
-void *client_thread(void *arg)
+static void *client_thread(void *arg)
 {
   printf("-----------------this is the first step--------------");
   cfd lcfd; /* local-connected-file-descriptor */
@@ -119,6 +126,7 @@ void *client_thread(void *arg)
   if(arg != NULL) {
       memcpy(&lcfd, arg, sizeof(cfd));
       free(arg);
+      socket_server_fd=lcfd.fd;
   } else
     return NULL;
 
@@ -138,6 +146,7 @@ printf("444444\n");
       memcpy(t_data_info.data, buff, nbyte+1);
 printf("6666\n");
       t_data_info.length = nbyte;
+      t_data_info.orig_fd = socket_server_fd;
 printf("5555555\n");
       pthread_cond_broadcast(&db_update);// 发出一个数据更新的信号，通知发送通道来取数据
       pthread_mutex_unlock( &db );// 原子操作结束
@@ -149,7 +158,7 @@ Description.: This function cleans up ressources allocated by the server_thread
 Input Value.: arg is not used
 Return Value: -
 ******************************************************************************/
-void server_cleanup(void *arg)
+static void server_cleanup(void *arg)
 {
     int i;
 

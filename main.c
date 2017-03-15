@@ -19,7 +19,7 @@
 #include "socket_bussiness.h"
 #include "wifi_config.h"
 
-pthread_t threadID;
+
 pthread_mutex_t db;
 pthread_cond_t  db_update;
 char *out_data;
@@ -47,9 +47,12 @@ int main(int argc,char *argv[])
   {
     printf("malloc error\n");
   }
+  server_run(&socket_server_threadID);
   printf("33333333333\n");
-  server_run(&threadID);
+  
+
   printf("77777777777\n");
+
   socket_bussiness();
   return 0;
 }

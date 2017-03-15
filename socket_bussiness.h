@@ -4,7 +4,6 @@
 #include "main.h"
 
 int socket_bussiness(void);
-void doit(char *receivedData, int dataLength);
-jsonType judgeJsonType(char * receivedData, int dataLength);
-void doit(char *receivedData, int dataLength);
+jsonType judgeJsonType(PT_Data_Info pt_data_info);
+void doit(PT_Data_Info pt_data_info);
 #endif

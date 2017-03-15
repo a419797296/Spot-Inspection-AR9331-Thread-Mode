@@ -28,15 +28,14 @@
 
 // }
 
-int config_wifi(char *receivedData)
+int config_wifi(PT_Data_Info pt_data_info)
 {
     cJSON *json;
     char *ssid;
     char *key;
     char cmd_buff[100];
-
     //------------------获取参数----
-    json=cJSON_Parse(receivedData);
+    json=cJSON_Parse(pt_data_info->data);
     ssid = cJSON_GetObjectItem(json,"ssid")->valuestring;
     key = cJSON_GetObjectItem(json,"key")->valuestring;
     memset(cmd_buff,0,100);
