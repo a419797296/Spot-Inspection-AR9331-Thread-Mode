@@ -14,7 +14,32 @@
     #define TRACE_CMH  
 #endif //_TRACE_CMH_DEBUG_  
 
+#define MAX_CLIENT_NUM	5
+typedef enum
+{
+	JSON_TYPE_GETWAY_TO_ZIGBEE = 1,
+	JSON_TYPE_ZIGBEE_TO_GETWAY, 
+	JSON_TYPE_CONTROL_CMD,
+	JSON_TYPE_DATA_REPOART,
+	JSON_TYPE_PRODUCT_INFO,
+	JSON_TYPE_OXYGEN,
+	JSON_TYPE_WIFI_CONFIG,
+	JSON_TYPE_ERROR
+}jsonType;
 
+ typedef struct{
+	char		*data;
+	int			length;
+	jsonType 	type;
+	int 		orig_fd;
+	int 		dest_fd[MAX_CLIENT_NUM];
+	int 		dest_cnt;
+}T_Data_Info, *PT_Data_Info;
+
+extern PT_Data_Info pt_data_info;
+extern T_Data_Info t_data_info;
+#define HARDWARE_VERSION				"V3.0"
+#define	SOFTWARE_VERSION				"20170315"
 #define ARRAY_SIZE(arr) (sizeof(arr)/sizeof((arr)[0]) 
 
 /*******************************************************/  
