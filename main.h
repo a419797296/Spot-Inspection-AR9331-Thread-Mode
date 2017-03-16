@@ -14,6 +14,35 @@
     #define TRACE_CMH  
 #endif //_TRACE_CMH_DEBUG_  
 
+/* ------------------------------------------------------------------------------------------------
+ *                                               Types
+ * ------------------------------------------------------------------------------------------------
+ */
+typedef signed   char   int8;
+typedef unsigned char   uint8;
+
+typedef signed   short  int16;
+typedef unsigned short  uint16;
+
+typedef signed   long   int32;
+typedef unsigned long   uint32;
+
+typedef unsigned char   bool;
+
+#define BUILD_UINT16(hiByte, loByte) \
+          ((uint16)(((loByte) & 0x00FF) + (((hiByte) & 0x00FF) << 8)))
+
+#define HI_UINT16(a) (((a) >> 8) & 0xFF)
+#define LO_UINT16(a) ((a) & 0xFF)
+
+#define BUILD_UINT8(hiByte, loByte) \
+          ((uint8)(((loByte) & 0x0F) + (((hiByte) & 0x0F) << 4)))
+
+#define HI_UINT8(a) (((a) >> 4) & 0x0F)
+#define LO_UINT8(a) ((a) & 0x0F)
+
+
+
 #define MAX_CLIENT_NUM	5
 typedef enum
 {

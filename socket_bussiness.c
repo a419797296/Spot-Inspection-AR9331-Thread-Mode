@@ -30,15 +30,10 @@ int socket_bussiness(void)
 
     while(1)
     {
-      pthread_cond_wait(&db_update, &db);
+        pthread_cond_wait(&db_update, &db);
       
-      printf("recieved the data is %s---------------\n",t_data_info.data);
-      if(!check_connectiong(5))
-      	printf("the network is ready\n");
-      else
-        printf("the network is not ready\n");
-    doit(&t_data_info);
-
+        printf("recieved the data is %s---------------\n",t_data_info.data);
+        doit(&t_data_info);
 
     }
     return 0;
@@ -128,9 +123,11 @@ void doit(PT_Data_Info pt_data_info)
             write(pt_data_info->orig_fd,"unconnect",sizeof("unconnect"));
         }
         else
+        {
             printf("---------------connect-----\n");
             write(pt_data_info->orig_fd,"connect",sizeof("connect"));
-            client_run(&socket_client_threadID);
+            client_run(&socket_client_threadID);            
+        }
 
         break;
     default:

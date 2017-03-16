@@ -15,7 +15,7 @@ int getMacAddr(char *device,char * macAddrBuff)
 {
     FILE *read_fp;
     int chars_read;
-    int ret;
+    int ret = -1;
     char cmd_buff[60]={0};
     sprintf(cmd_buff,"ifconfig %s|grep 'HWaddr'|awk -F '[ ]+' '{print $5}'",device);
     // sprintf(cmd_buff,"ifconfig %s|grep 'HWaddr'|awk -F '[ ]+' '{print $5}|tr -d '\n'",device);
@@ -28,26 +28,33 @@ int getMacAddr(char *device,char * macAddrBuff)
         printf("the macAddr is %s\n", macAddrBuff);
         if (chars_read>0)
         {
-            ret=1;/* code */
+            ret = 0;/* code */
         }
         else
         {
-            ret=-1;
+            ret = -1;
         }
         pclose(read_fp);
     }
     else
     {
-        ret=-1;
+        ret = -1;
     }
     return ret;
 }
 
 //-----------------------------------------------------
-void sendProductInfo(int sockfd,char * macAddr)
+void sendProductInfo(int sockfd)
 {
 	cJSON *root;
 	char *out;
+    char macAddr[18] = {0};
+
+    if(getMacAddr("eth0",macAddr) == -1)
+    {
+        printf("read the mac error: readed data is %s\n", macAddr);
+    }
+
 	root=cJSON_CreateObject();
 	cJSON_AddNumberToObject(root, "jsonType", JSON_TYPE_PRODUCT_INFO);
 	cJSON_AddStringToObject(root, "productMac", macAddr);

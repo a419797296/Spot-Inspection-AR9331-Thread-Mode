@@ -15,6 +15,7 @@
 #include <limits.h>
 #include "socket_server.h"
 #include "socket_driver.h"
+#include "com_tools.h"
 #include "main.h"
 
 int socket_server_fd;
@@ -89,6 +90,7 @@ static void *server_thread(void *arg)
     }   
 
     pcfd->fd = socketServerAccept(server_fd);
+    sendProductInfo(pcfd->fd);
     if (pcfd->fd < 0)
         exit(1);
     DBG("\n------------------------client is connected------------------------\n");  

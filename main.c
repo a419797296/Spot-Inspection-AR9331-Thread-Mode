@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <limits.h>
 #include "socket_server.h"
+#include "socket_client.h"
 #include "socket_driver.h"
 #include "socket_ser2net.h"
 #include "socket_bussiness.h"
@@ -40,19 +41,17 @@ int main(int argc,char *argv[])
       return -1;
     }
   memset(&t_data_info, 0, sizeof(t_data_info));
-  printf("11111111111111\n");
   t_data_info.data = malloc(1024);
-    printf("2222222222222222\n");
   if (t_data_info.data ==NULL)
   {
     printf("malloc error\n");
   }
-  server_run(&socket_server_threadID);
-  printf("33333333333\n");
-  
 
-  printf("77777777777\n");
-
+  ser2net_run(&socket_ser2net_threadID);
+  if(check_connectiong(5) == 0)
+    client_run(&socket_client_threadID);
+  else
+    server_run(&socket_server_threadID);
   socket_bussiness();
   return 0;
 }

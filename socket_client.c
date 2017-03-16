@@ -15,6 +15,7 @@
 #include <limits.h>
 #include "socket_client.h"
 #include "socket_driver.h"
+#include "com_tools.h"
 #include "main.h"
 
 int socket_client_fd;
@@ -62,9 +63,36 @@ int client_run(pthread_t *threadID)
 
 static void *client_thread(void *arg)
 {
+    char buff[1024]={0};
+    int nbyte;
     pthread_cleanup_push(client_cleanup, "test");
+    socket_client_fd = socketConnect(SERVER_IP,SERVER_PORT); 
 
-    printf("----------------here is in the client thread-------------\n");
+    if (socket_client_fd == -1)
+    {
+        printf("----------------can not connect to the server-------------\n");
+        return -1;
+    }
+    printf("----------------have connect to the server-------------\n");
+    sendProductInfo(socket_client_fd);
+    while(1)
+    {
+      if((nbyte=read(socket_client_fd,buff,1024))<=0)
+      {
+        printf("client read err---------------\n");
+        close(socket_client_fd);
+        return NULL;
+      }  
+      buff[nbyte] = 0;
+      printf("nbyte is %d,read data is %s\n",nbyte,buff);
+      pthread_mutex_lock(&db);
+      memcpy(t_data_info.data, buff, nbyte+1);
+      t_data_info.length = nbyte;
+      t_data_info.orig_fd = socket_client_fd;
+      pthread_cond_broadcast(&db_update);// 发出一个数据更新的信号，通知发送通道来取数据
+      pthread_mutex_unlock( &db );// 原子操作结束
+
+    }
 
     pthread_cleanup_pop(1);
     return NULL;
