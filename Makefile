@@ -1,6 +1,6 @@
 .PHONY:clean
 
-OBJECTS= main.o socket_server.o socket_client.o socket_ser2net.o wifi_config.o socket_driver.o socket_bussiness.o com_tools.o cJSON.o
+OBJECTS= main.o socket_server.o socket_client.o socket_ser2net.o wifi_config.o socket_driver.o socket_bussiness.o com_tools.o cJSON.o oxygen_flow.o
 
 spot_inspection_app:$(OBJECTS)
 	mips-openwrt-linux-gcc -Wall  $^ -o $@ -lm -lpthread -Wl,--rpath-link /opt/OpenWrt-Toolchain-ar71xx-for-mips_34kc-gcc-4.8-linaro_uClibc-0.9.33.2/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/lib
@@ -22,6 +22,8 @@ com_tools.o:com_tools.c
 	mips-openwrt-linux-gcc -Wall  -c $< -o $@
 cJSON.o:cJSON.c
 	mips-openwrt-linux-gcc -Wall  -c $< -o $@ -lm
+oxygen_flow.o:oxygen_flow.c
+	mips-openwrt-linux-gcc -Wall  -c $< -o $@
 clean:
 	rm -f $(OBJECTS) spot_inspection_app
 

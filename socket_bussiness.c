@@ -33,7 +33,9 @@ int socket_bussiness(void)
         pthread_cond_wait(&db_update, &db);
       
         printf("recieved the data is %s---------------\n",t_data_info.data);
+		pthread_mutex_lock(&db);	
         doit(&t_data_info);
+		pthread_mutex_unlock( &db );// 原子操作结束
 
     }
     return 0;
@@ -135,3 +137,4 @@ void doit(PT_Data_Info pt_data_info)
         break;
     }
 }
+

@@ -17,6 +17,7 @@
 #include "socket_driver.h"
 #include "com_tools.h"
 #include "main.h"
+#include "oxygen_flow.h"
 
 int socket_client_fd;
 pthread_t socket_client_threadID;
@@ -54,7 +55,7 @@ Return Value: always 0
 int client_run(pthread_t *threadID)
 {
     printf("launching client thread #%02d\n", (int)(*threadID));
-
+	oxygenFlowRun();
     pthread_create(threadID, NULL, client_thread, (void *)NULL);
     pthread_detach(*threadID);
 
@@ -71,7 +72,7 @@ static void *client_thread(void *arg)
     if (socket_client_fd == -1)
     {
         printf("----------------can not connect to the server-------------\n");
-        return -1;
+        return NULL;
     }
     printf("----------------have connect to the server-------------\n");
     sendProductInfo(socket_client_fd);
