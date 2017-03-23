@@ -14,21 +14,21 @@ echo the input SSID is $SSID, key is $key
 
 if [ ! $key = "none" ]
 then
-	uci set wireless.@wifi-iface[-2].encryption=psk2
-	uci set wireless.@wifi-iface[-2].key=$key
+	uci set wireless.ap.encryption=psk2
+	uci set wireless.ap.key=$key
 else
 	
-	uci set wireless.@wifi-iface[-2].encryption=none
-	uci delete wireless.@wifi-iface[-2].key
+	uci set wireless.ap.encryption=none
+	uci delete wireless.ap.key
 	echo starting ap without key
 fi
 
 
-uci set wireless.@wifi-iface[-2].ssid=$SSID
-uci set wireless.@wifi-iface[-2].disabled=0
+uci set wireless.ap.ssid=$SSID
+uci set wireless.ap.disabled=0
 
 #disable the sta mode 
-uci set wireless.@wifi-iface[-1].disabled=1
+uci set wireless.sta.disabled=1
 
 uci commit wireless
 /etc/init.d/network restart

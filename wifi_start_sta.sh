@@ -12,8 +12,8 @@ ping www.baidu.com -c 1 > nul
 
 if [ $? == 0 ]
 then
-	SSID=`uci get wireless.@wifi-iface[-1].ssid`
-	key=`uci get wireless.@wifi-iface[-1].key`
+	SSID=`uci get wireless.sta.ssid`
+	key=`uci get wireless.sta.key`
 	echo the network have already connected,which SSID is $SSID, key is $key
 	exit
 fi
@@ -21,9 +21,9 @@ fi
 SSID=$1
 key=$2
 echo the input SSID is $SSID, key is $key
-uci set wireless.@wifi-iface[-1].ssid=$SSID
-uci set wireless.@wifi-iface[-1].key=$key
-uci set wireless.@wifi-iface[-1].disabled=0
+uci set wireless.sta.ssid=$SSID
+uci set wireless.sta.key=$key
+uci set wireless.sta.disabled=0
 uci commit wireless
 /etc/init.d/network restart
 
