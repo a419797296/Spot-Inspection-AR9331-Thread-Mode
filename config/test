@@ -1,5 +1,0 @@
-
-config user
-	option name 'blue'
-	option email '1111111111'
-
