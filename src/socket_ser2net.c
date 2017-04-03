@@ -31,9 +31,10 @@ int ser2net_init(void)
     char port[6]={0};
     ser2net_iface.ip=malloc(16);
     memset(ser2net_iface.ip,0,16);
-    getSysUciCfg("oxygen","ser2net","ip",ser2net_iface.ip);
-    getSysUciCfg("oxygen","ser2net","port",port);
+    getSysUciCfg("spotInspection","ser2net","ip",ser2net_iface.ip);
+    getSysUciCfg("spotInspection","ser2net","port",port);
     ser2net_iface.port = atoi(port);
+    ser2net_iface.fd = -1;
     printf("IP:%s,port:%d\n",ser2net_iface.ip, ser2net_iface.port);
     return 0;
 }
@@ -93,6 +94,7 @@ static void *ser2net_thread(void *arg)
       {
         printf("ser2net read err---------------\n");
         close(ser2net_iface.fd);
+	ser2net_iface.fd = -1;
         return NULL;
       }  
       memcpy(buff + allNum, package, nbyte);
@@ -144,12 +146,16 @@ static void *ser2net_thread(void *arg)
         fullPackaged = 0;
         buff[allNum] = 0;
         printf("allNum is %d,read data is %s\n",allNum,buff);
-        pthread_mutex_lock(&db);
-        memcpy(t_data_info.data, buff, allNum+1);
-        t_data_info.length = allNum;
-        t_data_info.orig_fd = ser2net_iface.fd;
-        pthread_cond_broadcast(&db_update);// 发出一个数据更新的信号，通知发送通道来取数据
-        pthread_mutex_unlock( &db );// 原子操作结束        
+	if(is_time_to_report)
+		{
+	        pthread_mutex_lock(&db);
+	        memcpy(t_data_info.data, buff, allNum+1);
+	        t_data_info.length = allNum;
+	        t_data_info.orig_fd = ser2net_iface.fd;
+		
+	        pthread_cond_broadcast(&db_update);// 发出一个数据更新的信号，通知发送通道来取数据
+	        pthread_mutex_unlock( &db );// 原子操作结束
+		}
       }
     }
 

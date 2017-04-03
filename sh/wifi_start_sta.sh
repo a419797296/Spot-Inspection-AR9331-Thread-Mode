@@ -8,7 +8,7 @@ then
 	exit
 fi
 
-ping www.baidu.com -c 1 > nul
+ping www.baidu.com -c 1 -w 1> nul
 
 if [ $? == 0 ]
 then

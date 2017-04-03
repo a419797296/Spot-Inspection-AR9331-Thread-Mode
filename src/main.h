@@ -53,6 +53,7 @@ typedef enum
 	JSON_TYPE_PRODUCT_INFO,
 	JSON_TYPE_OXYGEN_REPOART,
 	JSON_TYPE_WIFI_CONFIG,
+	JSON_TYPE_INTERVAL_CONFIG,
 	JSON_TYPE_ERROR
 }jsonType;
 
@@ -74,14 +75,14 @@ typedef enum
 	int			length;
 	jsonType 	type;
 	int 		orig_fd;
-	int 		dest_fd[MAX_CLIENT_NUM];
-	int 		dest_cnt;
+	int 		dest_fd;
 }T_Data_Info, *PT_Data_Info;
 
 
 extern PT_Data_Info pt_data_info;
 extern T_Data_Info t_data_info;
 extern PRODUCT_INFO produc_info;
+extern bool is_time_to_report;
 #define HARDWARE_VERSION				"V3.0"
 #define	SOFTWARE_VERSION				"20170327"
 #define ARRAY_SIZE(arr) (sizeof(arr)/sizeof((arr)[0]) 

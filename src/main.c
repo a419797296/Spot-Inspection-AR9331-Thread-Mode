@@ -24,6 +24,7 @@
 pthread_mutex_t db;
 pthread_cond_t  db_update;
 char *out_data;
+bool is_time_to_report = 0;
 PT_Data_Info pt_data_info;
 T_Data_Info t_data_info;
 PRODUCT_INFO produc_info;
@@ -42,11 +43,12 @@ void systemInit(void)
   {
       printf("read the mac error: readed data is %s\n", macAddr);
   }
-  getSysUciCfg("oxygen","product_info","hw_vers",hw_vers);
-  getSysUciCfg("oxygen","product_info","sw_vers",sw_vers);
+  getSysUciCfg("spotInspection","product_info","hw_vers",hw_vers);
+  getSysUciCfg("spotInspection","product_info","sw_vers",sw_vers);
   produc_info.hw_vers = strdup(hw_vers);
   produc_info.sw_vers = strdup(sw_vers);
   produc_info.mac = strdup(macAddr);
+  printf("produc_info.mac:%s,produc_info.hw_vers:%s,produc_info.sw_vers :%s",produc_info.mac,produc_info.hw_vers,produc_info.sw_vers );
 }
 //----------------------------------------
 int main(int argc,char *argv[])
@@ -54,8 +56,8 @@ int main(int argc,char *argv[])
   systemInit();
   char rst[20];
   memset(rst,0,20);
-  while(1)
-    sleep(1);
+  //while(1)
+   // sleep(1);
 
   if( pthread_mutex_init(&db, NULL) != 0 )
   /* 初始化 global.db 成员 */

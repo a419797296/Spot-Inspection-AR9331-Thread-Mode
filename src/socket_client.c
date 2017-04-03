@@ -32,9 +32,10 @@ int client_init(void)
     char port[6]={0};
     cloud_iface.ip=malloc(16);
     memset(cloud_iface.ip,0,16);
-    getSysUciCfg("oxygen","server","ip",cloud_iface.ip);
-    getSysUciCfg("oxygen","server","port",port);
+    getSysUciCfg("spotInspection","cloud","ip",cloud_iface.ip);
+    getSysUciCfg("spotInspection","cloud","port",port);
     cloud_iface.port = atoi(port);
+    cloud_iface.fd = -1;
     printf("IP:%s,port:%d\n",cloud_iface.ip, cloud_iface.port);
     return 0;
 }
@@ -91,6 +92,7 @@ static void *client_thread(void *arg)
       {
         printf("client read err---------------\n");
         close(cloud_iface.fd);
+	cloud_iface.fd = -1;
         return NULL;
       }  
       buff[nbyte] = 0;

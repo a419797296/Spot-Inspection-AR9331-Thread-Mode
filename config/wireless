@@ -27,5 +27,5 @@ config wifi-iface 'sta'
 	option bssid '8C:BE:BE:29:B6:E6'
 	option key 'huishu505'
 	option macaddr '00:ca:01:0f:00:01'
-	option disabled '0'
+	option disabled '1'
 

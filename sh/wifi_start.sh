@@ -24,7 +24,7 @@ then
 	i=0
 	while [ $i -ne 10 ]
 	do
-		ping www.baidu.com -c 1 > nul
+		ping www.baidu.com -c 1 -w 1> nul
 		if [ $? -eq 0 ]
 		then
 			echo 'the network have already connected'
@@ -33,7 +33,7 @@ then
 			exit
 		fi
 		i=$(($i+1))
-		sleep 2
+		sleep 1
 	done
 	echo 'can not connect the wifi, changeing to the ap mode...'
 

@@ -33,7 +33,7 @@ int server_init(void)
     char port[6]={0};
     server_iface.ip=malloc(16);
     memset(server_iface.ip,0,16);
-    getSysUciCfg("oxygen","server","port",port);
+    getSysUciCfg("spotInspection","server","port",port);
     server_iface.port = atoi(port);
     printf("port:%d\n",server_iface.port);
     return 0;

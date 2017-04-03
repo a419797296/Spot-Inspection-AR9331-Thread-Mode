@@ -5,9 +5,10 @@
 
 void oxygenFlowInitSigaction(void);
 void oxygenFlowInitTime(long ms);
+void oxygenFlowTimer(int sig);
 void oxygenFlowRun(void);
 void oxygenFlowCfg(PT_Data_Info pt_data_info);
-void oxygenFlowReport(int sig);
+void oxygenFlowReport(PT_Data_Info pt_data_info);
 void oxygenFlowUpdata(void);
 
 #endif

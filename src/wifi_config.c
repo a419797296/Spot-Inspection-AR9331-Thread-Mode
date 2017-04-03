@@ -39,7 +39,7 @@ int config_wifi(PT_Data_Info pt_data_info)
     ssid = cJSON_GetObjectItem(json,"ssid")->valuestring;
     key = cJSON_GetObjectItem(json,"key")->valuestring;
     memset(cmd_buff,0,100);
-    sprintf(cmd_buff,"./wifi_start_sta.sh %s %s",ssid,key);
+    sprintf(cmd_buff,"/root/wifi_start_sta.sh %s %s",ssid,key);
     printf("the cmd is %s\n", cmd_buff);
     system(cmd_buff);
     cJSON_Delete(json);
@@ -57,6 +57,6 @@ int check_connectiong(int test_time)
     printf("ping failed------------\n");
     sleep(1);
   }
-  system("./wifi_start_ap.sh Spot_inspection none");  //if not successs, stat the ap mode
+  system("/root/wifi_start_ap.sh Spot_inspection none");  //if not successs, stat the ap mode
   return -1;
 }

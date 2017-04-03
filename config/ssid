@@ -1,0 +1,13 @@
+
+config ssid_list 'ssidList'
+	option ssid4 'null'
+	option ssid5 'null'
+	option ssid0 'HUISHU'
+	option ssid1 'Huishu'
+	option ssid2 'Guest'
+	option ssid3 'ChinaNet-FK0g'
+
+config wifi_info 'wifiInfo'
+	option ssid '0'
+	option key 'huishu505'
+

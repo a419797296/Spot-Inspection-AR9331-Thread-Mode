@@ -37,6 +37,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/spotInspection
 	SECTION:=utils
 	CATEGORY:=Utilities
+	DEPENDS:=+libpthread
 	TITLE:=spotInspection -- for system use
 endef
 
@@ -48,7 +49,7 @@ define Package/spotInspection/description
 endef
 
 define Package/spotInspection/conffiles
-/etc/spotInspection.conf
+	/etc/config/spotIinspection
 endef
 
  
@@ -78,10 +79,25 @@ endef
 define Package/spotInspection/install
 	$(INSTALL_DIR) $(1)/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/spotInspection $(1)/bin/
+	
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/spotInspectionCtl.init $(1)/etc/init.d/spotInspection
+	$(INSTALL_BIN) ./init.d/* $(1)/etc/init.d/
+
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DATA) ./files/spotInspection.conf $(1)/etc/config/spotInspection
+	$(INSTALL_BIN) ./config/* $(1)/etc/config/
+
+	$(INSTALL_DIR) $(1)/root
+	$(INSTALL_BIN) ./sh/* $(1)/root/
+
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_BIN) ./lib/* $(1)/usr/lib/
+
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller/admin
+	$(INSTALL_BIN) ./controller/* $(1)/usr/lib/lua/luci/controller/admin/
+
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model/cbi
+	$(INSTALL_BIN) ./cbi/* $(1)/usr/lib/lua/luci/model/cbi/
+	
 endef
 
 

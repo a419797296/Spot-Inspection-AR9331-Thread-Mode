@@ -22,7 +22,7 @@
 #include "cJSON.h"
 #include "main.h"
 #include "wifi_config.h"
-
+#include "oxygen_flow.h"
 
 int socket_bussiness(void)
 {
@@ -62,7 +62,10 @@ jsonType judgeJsonType(PT_Data_Info pt_data_info)
         }
     }
     else if(*receivedData==0x16)
-        json_type = JSON_TYPE_OXYGEN_REPOART;
+    	{
+        	json_type = JSON_TYPE_OXYGEN_REPOART;
+		pt_data_info->dest_fd = cloud_iface.fd;
+    	}
     else
     {
         if (receivedData[0]=='$' && receivedData[1]=='@' && receivedData[dataLength-2]=='\r' && receivedData[dataLength-1]=='\n')
@@ -132,6 +135,13 @@ void doit(PT_Data_Info pt_data_info)
         }
 
         break;
+	case JSON_TYPE_INTERVAL_CONFIG:
+		oxygenFlowCfg(pt_data_info);
+	break;
+	
+	case JSON_TYPE_OXYGEN_REPOART:
+		oxygenFlowCfg(pt_data_info);
+	break;
     default:
         printf("jsonType is default+\r\n");
         break;
