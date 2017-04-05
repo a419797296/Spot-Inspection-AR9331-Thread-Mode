@@ -111,7 +111,7 @@ static void *ser2net_thread(void *arg)
 
       if(buff[0]!=0x16)
       {
-          PLOG("first byte error :%x\n",buff[0]);
+          DBG("first byte error :%x\n",buff[0]);
           allNum = 0;
           // memset(buff, '\0', sizeof(buff));
           continue;
@@ -123,16 +123,17 @@ static void *ser2net_thread(void *arg)
         unsigned char xor=0;
         for(i=0; i<allNum; i++)
         {
-            PLOG("%02x ",(unsigned char)buff[i]);
+            DBG("%02x ",(unsigned char)buff[i]);
             if(i<11)
                 xor-=buff[i];
 
         }
-        PLOG("\nthe xor is %02x \n",xor);
+        DBG("\nthe xor is %02x \n",xor);
         /*PLOG("\nthe soc is %02x \n",soc);*/
         if(xor==(unsigned char)buff[11])
         {
             fullPackaged =1;
+		allNum = SER2NET_FIX_LENGTH;
         }
         else
         {
@@ -156,6 +157,7 @@ static void *ser2net_thread(void *arg)
 	        pthread_cond_broadcast(&db_update);// 发出一个数据更新的信号，通知发送通道来取数据
 	        pthread_mutex_unlock( &db );// 原子操作结束
 		}
+		allNum = 0;
       }
     }
 

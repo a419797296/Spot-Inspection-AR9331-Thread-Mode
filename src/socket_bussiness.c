@@ -136,7 +136,11 @@ void doit(PT_Data_Info pt_data_info)
 
         break;
 	case JSON_TYPE_INTERVAL_CONFIG:
-		oxygenFlowCfg(pt_data_info);
+		oxygenFlowCfgTm(pt_data_info);
+	break;
+
+	case JSON_TYPE_SERVER_CONFIG:
+		oxygenFlowCfgServer(pt_data_info);
 	break;
 	
 	case JSON_TYPE_OXYGEN_REPOART:

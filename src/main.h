@@ -54,6 +54,7 @@ typedef enum
 	JSON_TYPE_OXYGEN_REPOART,
 	JSON_TYPE_WIFI_CONFIG,
 	JSON_TYPE_INTERVAL_CONFIG,
+	JSON_TYPE_SERVER_CONFIG,
 	JSON_TYPE_ERROR
 }jsonType;
 
@@ -65,9 +66,9 @@ typedef enum
 }SOCKET_INTERFACE;
 
  typedef struct{
-	char		*hw_vers;
-	char		*sw_vers;
-	char 		*mac;
+	char		hw_vers[8];
+	char		sw_vers[8];
+	char 		mac[18];
 }PRODUCT_INFO;
 
  typedef struct{

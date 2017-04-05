@@ -36,18 +36,21 @@ static void systemInit(void);
 //----------------------------------------
 void systemInit(void)
 {
-  char macAddr[18] = {0};
-  char hw_vers[8] = {0};
-  char sw_vers[8] = {0};
-  if(getMacAddr("eth0",macAddr) == -1)
+  //char macAddr[18] = {0};
+  //char hw_vers[8] = {0};
+  //char sw_vers[8] = {0};
+  memset(produc_info.hw_vers, 0, sizeof(produc_info.hw_vers));
+  memset(produc_info.sw_vers, 0, sizeof(produc_info.sw_vers));
+  memset(produc_info.mac, 0, sizeof(produc_info.mac));
+  if(getMacAddr("eth0",produc_info.mac) == -1)
   {
-      printf("read the mac error: readed data is %s\n", macAddr);
+      printf("read the mac error: readed data is %s\n", produc_info.mac);
   }
-  getSysUciCfg("spotInspection","product_info","hw_vers",hw_vers);
-  getSysUciCfg("spotInspection","product_info","sw_vers",sw_vers);
-  produc_info.hw_vers = strdup(hw_vers);
-  produc_info.sw_vers = strdup(sw_vers);
-  produc_info.mac = strdup(macAddr);
+  getSysUciCfg("spotInspection","product_info","hw_vers",produc_info.hw_vers);
+  getSysUciCfg("spotInspection","product_info","sw_vers",produc_info.sw_vers);
+  //produc_info.hw_vers = strdup(hw_vers);
+  //produc_info.sw_vers = strdup(sw_vers);
+  //produc_info.mac = strdup(macAddr);
   printf("produc_info.mac:%s,produc_info.hw_vers:%s,produc_info.sw_vers :%s\n",produc_info.mac,produc_info.hw_vers,produc_info.sw_vers );
 
 }

@@ -57,7 +57,7 @@ void oxygenFlowRun(void)
     	oxygenFlowInitTime(atoi(time_interval)*1000);
 }
 //------------------------------------------------
-void oxygenFlowCfg(PT_Data_Info pt_data_info)
+void oxygenFlowCfgTm(PT_Data_Info pt_data_info)
 {
     char *receivedData = pt_data_info->data;
     cJSON *json;
@@ -68,6 +68,22 @@ void oxygenFlowCfg(PT_Data_Info pt_data_info)
 	setSysUciCfgNum("spotInspection","para","interval",tmInterval);
     cJSON_Delete(json);
 }
+
+//------------------------------------------------
+void oxygenFlowCfgServer(PT_Data_Info pt_data_info)
+{
+    char *receivedData = pt_data_info->data;
+    cJSON *json;
+    int port;
+	char *ip;
+    json=cJSON_Parse(receivedData);
+    port = cJSON_GetObjectItem(json,"port")->valueint;
+	ip = cJSON_GetObjectItem(json,"ip")->valuestring;
+	setSysUciCfgNum("spotInspection","cloud","port",port);
+	setSysUciCfgStr("spotInspection","cloud","ip",ip);
+    cJSON_Delete(json);
+}
+
 //------------------------------------------------
 void oxygenFlowReport(PT_Data_Info pt_data_info)
 {
