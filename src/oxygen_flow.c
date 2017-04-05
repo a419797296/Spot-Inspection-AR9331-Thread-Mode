@@ -62,12 +62,10 @@ void oxygenFlowCfg(PT_Data_Info pt_data_info)
     char *receivedData = pt_data_info->data;
     cJSON *json;
     int tmInterval;
-	char tmIntervalString[6]={0};
     json=cJSON_Parse(receivedData);
     tmInterval = cJSON_GetObjectItem(json,"timeInterval")->valueint;
-	sprintf(tmIntervalString,"%d",tmInterval);
-    //oxygenFlowInitTime(timeInterval);
-	setSysUciCfg("spotInspection","para","interval",tmIntervalString);
+    oxygenFlowInitTime(tmInterval*1000);
+	setSysUciCfgNum("spotInspection","para","interval",tmInterval);
     cJSON_Delete(json);
 }
 //------------------------------------------------

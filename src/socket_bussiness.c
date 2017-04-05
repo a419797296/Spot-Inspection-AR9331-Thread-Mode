@@ -140,7 +140,7 @@ void doit(PT_Data_Info pt_data_info)
 	break;
 	
 	case JSON_TYPE_OXYGEN_REPOART:
-		oxygenFlowCfg(pt_data_info);
+		oxygenFlowReport(pt_data_info);
 	break;
     default:
         printf("jsonType is default+\r\n");

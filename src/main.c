@@ -48,7 +48,8 @@ void systemInit(void)
   produc_info.hw_vers = strdup(hw_vers);
   produc_info.sw_vers = strdup(sw_vers);
   produc_info.mac = strdup(macAddr);
-  printf("produc_info.mac:%s,produc_info.hw_vers:%s,produc_info.sw_vers :%s",produc_info.mac,produc_info.hw_vers,produc_info.sw_vers );
+  printf("produc_info.mac:%s,produc_info.hw_vers:%s,produc_info.sw_vers :%s\n",produc_info.mac,produc_info.hw_vers,produc_info.sw_vers );
+
 }
 //----------------------------------------
 int main(int argc,char *argv[])

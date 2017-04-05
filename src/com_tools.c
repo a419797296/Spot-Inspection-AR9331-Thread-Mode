@@ -57,7 +57,7 @@ void sendProductInfo(int sockfd)
 	out=cJSON_PrintUnformatted(root);
 	// sprintf(outcmd,"%s",out);	
 	 // printf("%d\n",strlen(out));	
-	socketWrite(sockfd,out,strlen(out)+1);
+	socketWrite(sockfd,out,strlen(out));
 	cJSON_Delete(root);	
 	free(out);
 }
@@ -211,7 +211,7 @@ int getSysUciCfg(char *filename,char *section,char *option,char * result)
         if (chars_read>0)
         {
             ret = 0;/* code */
-            *(result+chars_read) = 0;   
+            *(result+chars_read-1) = 0;   // the read result include '\n'
             printf("the read config is %s\n", result);
         }
         else
@@ -228,9 +228,23 @@ int getSysUciCfg(char *filename,char *section,char *option,char * result)
 }
 
 //-----------------------------------------------------
-int setSysUciCfg(char *filename,char *section,char *option,char * parameter)
+int setSysUciCfgStr(char *filename,char *section,char *option,char * parameter)
 {
     char cmd_buff[60]={0};
-    sprintf(cmd_buff,"uci set %s.%s.%s=%s",filename,section,option,parameter);
-    return system(cmd_buff);
+	int rst;
+	sprintf(cmd_buff,"uci set %s.%s.%s=%s",filename,section,option,parameter);
+	rst = system(cmd_buff);
+	system("uci commit");
+    return rst;
+}
+
+//-----------------------------------------------------
+int setSysUciCfgNum(char *filename,char *section,char *option,int parameter)
+{
+    char cmd_buff[60]={0};
+	int rst;
+    sprintf(cmd_buff,"uci set %s.%s.%s=%d",filename,section,option,parameter);
+	rst = system(cmd_buff);
+	system("uci commit");
+    return rst;
 }
