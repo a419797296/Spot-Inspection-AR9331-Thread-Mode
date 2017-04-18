@@ -77,6 +77,7 @@ static void *server_thread(void *arg)
      /* set cleanup handler to cleanup ressources */
     pthread_cleanup_push(server_cleanup, "test");
  server_fd = socketInit(server_iface.port);
+ system("/root/led.sh blink_fast tp-link:blue:system");	//light on the led
  if (server_fd < 0)
  {
      printf("socket server init error\n");

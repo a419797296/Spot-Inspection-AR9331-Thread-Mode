@@ -117,14 +117,15 @@ void oxygenFlowReport(PT_Data_Info pt_data_info)
 		    if (cloud_iface.fd == -1)
 		    {
 		        printf("----------------can not reconnect to the server-------------\n");
-
 	//------------------------here will add the data saving function			
 		        return ;
 		    }
 		else
 			{
 			    printf("----------------have reconnect to the server-------------\n");
-			    sendProductInfo(cloud_iface.fd);
+				system("/root/led.sh led_on tp-link:blue:system");	//light on the led
+				sendProductInfo(cloud_iface.fd);
+				
 	//------------------------here will add the function of sending the resaved data
 		}
 	}

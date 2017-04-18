@@ -5,10 +5,10 @@ source /lib/functions/leds.sh
 [ $# -ne 2  ] && echo 'need $1(stat),$2(led_dev)' && exit 1
 status_led=$2
 case $1 in
-led_on)
+led_off)
 	echo "what happened?"
 	status_led_on $status_led;;
-led_off)
+led_on)
 	status_led_off $status_led;;
 blink_slow)
 	status_led_blink_slow $status_led;;
@@ -19,6 +19,4 @@ blink_preinit)
 *)
 	echo "error"
 esac
-
-
 

@@ -3,7 +3,7 @@
 ssid_list_num=`uci get spotInspection.wifiInfo.ssid`
 ssid=`uci get spotInspection.ssidList."ssid$ssid_list_num"`
 key=`uci get spotInspection.wifiInfo.key`
-touch /root/"$ssid" /root/"$key"
+#touch /root/"$ssid" /root/"$key"
 #/root/wifi_start.sh sta $ssid $key
 
 #--------------------------------------------------start sta
@@ -15,6 +15,7 @@ then
         SSID=`uci get wireless.sta.ssid`
         key=`uci get wireless.sta.key`
         echo the network have already connected,which SSID is $SSID, key is $key
+	/etc/init.d/spotInspection start
         exit
 fi
 
@@ -30,7 +31,7 @@ uci commit wireless
 echo "checking sta mode"
 
         i=0
-        while [ $i -ne 15 ]
+        while [ $i -ne 20 ]
         do
                 ping www.baidu.com -c 1 -w 1 > nul
                 if [ $? -eq 0 ]
@@ -38,6 +39,7 @@ echo "checking sta mode"
                         echo 'the network have already connected'
                         ip=`ifconfig wlan0|awk -F'[ :]+' '/inet addr/{print $4}'`
                         echo "the current ip is $ip"
+			/etc/init.d/spotInspection start
                         exit
                 fi
                 i=$(($i+1))

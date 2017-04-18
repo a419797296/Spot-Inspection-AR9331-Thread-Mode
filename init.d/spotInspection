@@ -21,3 +21,4 @@ stop()
 {
 	kill $(pidof spotInspection)
 }
+

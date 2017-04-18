@@ -32,7 +32,17 @@ int socket_bussiness(void)
     {
         pthread_mutex_lock(&db);    
         pthread_cond_wait(&db_update, &db);
-      
+	 /*if(check_connectiong(5) != 0)
+  		system("/root/led.sh blink_fast tp-link:blue:system");	//flash the led if the network is not ready 
+	if(!SocketConnected(cloud_iface.fd))
+		{
+		printf("have not connect to the server");
+		if(check_connectiong(5) == 0)
+			client_run(&cloud_iface.threadID);
+		else
+			printf("please check the network connection");
+	}*/
+		
         printf("recieved the data is %s---------------\n",t_data_info.data);
         doit(&t_data_info);
 		pthread_mutex_unlock( &db );// 原子操作结束

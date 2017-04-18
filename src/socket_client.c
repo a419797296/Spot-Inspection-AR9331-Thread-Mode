@@ -82,9 +82,11 @@ static void *client_thread(void *arg)
     if (cloud_iface.fd == -1)
     {
         printf("----------------can not connect to the server-------------\n");
+	system("/root/led.sh blink_slow tp-link:blue:system");	//light on the led
         return NULL;
     }
     printf("----------------have connect to the server-------------\n");
+	system("/root/led.sh led_on tp-link:blue:system");	//light on the led
     sendProductInfo(cloud_iface.fd);
     while(1)
     {
@@ -93,6 +95,7 @@ static void *client_thread(void *arg)
         printf("client read err---------------\n");
         close(cloud_iface.fd);
 	cloud_iface.fd = -1;
+	system("/root/led.sh blink_slow tp-link:blue:system");	//light on the led
         return NULL;
       }  
       buff[nbyte] = 0;
