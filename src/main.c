@@ -53,7 +53,7 @@ void systemInit(void)
   //produc_info.mac = strdup(macAddr);
   printf("produc_info.mac:%s,produc_info.hw_vers:%s,produc_info.sw_vers :%s\n",produc_info.mac,produc_info.hw_vers,produc_info.sw_vers );
   system("/root/led.sh blink_slow tp-link:blue:system");	//light on the led
-   system("/root/spotInspection_init.sh");	//init working environment
+   //system("/root/spotInspection_init.sh");	//init working environment
 
 }
 //----------------------------------------
@@ -84,7 +84,7 @@ int main(int argc,char *argv[])
   }
 
   ser2net_run(&ser2net_iface.threadID);
-  if(check_connectiong(10) != 0)
+  if(check_connectiong(30) != 0)
   	system("/root/led.sh blink_fast tp-link:blue:system");	//flash the led if the network is not ready 
   client_run(&cloud_iface.threadID);
   socket_bussiness();

@@ -43,7 +43,7 @@ int config_wifi(PT_Data_Info pt_data_info)
     printf("the cmd is %s\n", cmd_buff);
     system(cmd_buff);
     cJSON_Delete(json);
-    return check_connectiong(10);
+    return check_connectiong(30);
 }
 //-----------------------check connect------------
 int check_connectiong(int test_time)

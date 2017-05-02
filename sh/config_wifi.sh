@@ -48,7 +48,6 @@ echo "checking sta mode"
 
 #-------------------------------------------------if can not connect to the wifi, then change to the ap mode
         echo 'can not connect the wifi, changeing to the ap mode...'
-
         uci set wireless.ap.encryption=none
         uci delete wireless.ap.key
         echo starting ap without key

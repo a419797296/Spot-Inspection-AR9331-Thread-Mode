@@ -18,6 +18,8 @@ if [ $? -ne 0 ];then
 #	echo "ser2net server has already started"
 fi
 
+/root/config_wifi.sh
+
 
 
 
