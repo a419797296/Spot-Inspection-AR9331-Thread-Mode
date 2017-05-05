@@ -80,12 +80,23 @@ jsonType judgeJsonType(PT_Data_Info pt_data_info)
     {
         if (receivedData[0]=='$' && receivedData[1]=='@' && receivedData[dataLength-2]=='\r' && receivedData[dataLength-1]=='\n')
         {
-            printf("------------------success+++success--%d------------\n",dataLength);
-            json_type = JSON_TYPE_GETWAY_TO_ZIGBEE;
+            printf("------------------success+++--%d------------\n",dataLength);
+		if(pt_data_info->orig_fd == cloud_iface.fd)
+			{
+			json_type = JSON_TYPE_GETWAY_TO_ZIGBEE;
+			pt_data_info->dest_fd = ser2net_iface.fd;
+		}
+			
+		if(pt_data_info->orig_fd == ser2net_iface.fd)
+			{
+			json_type = JSON_TYPE_ZIGBEE_TO_GETWAY;
+			pt_data_info->dest_fd = cloud_iface.fd;
+		}
+            		
         }
         else
         {
-            printf("------------------ERROR+++success--%d------------\n",dataLength);
+            printf("------------------ERROR+++--%d------------\n",dataLength);
             json_type = JSON_TYPE_ERROR;
         }
     }
@@ -106,30 +117,15 @@ void doit(PT_Data_Info pt_data_info)
     //     printf("jsonType is CONTROL_CMD\r\n");
     //     doControlInfo(receivedData);
     //     break;
-    // case JSON_TYPE_GETWAY_TO_ZIGBEE:
-    //     printf("jsonType is GETWAY_TO_ZIGBEE\r\n");
-    //     socketWriteByPackages(socket_ser2net_interface.socket_fd,receivedData, dataLength, 64, 20000);
-    //     break;
-    // case JSON_TYPE_ZIGBEE_TO_GETWAY:
-    //     printf("jsonType is ZIGBEE_TO_GETWAY\r\n");
-    //     *(receivedData+dataLength)=0;
-    //     if (*(enable_mode+1)=='1')//if the app works in server model, then send the data back to client
-    //     {
-    //         socketWriteNoEnd(socket_server_interface.socket_fd, receivedData, dataLength+1);   //+1 means sent '/0' together
-    //         printf("%c\n", *(enable_mode+1));
-    //     }
+     case JSON_TYPE_GETWAY_TO_ZIGBEE:
+         printf("jsonType is GETWAY_TO_ZIGBEE\r\n");
+         socketWriteNoEnd(ser2net_iface.fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
+         break;
+     case JSON_TYPE_ZIGBEE_TO_GETWAY:
+         printf("jsonType is ZIGBEE_TO_GETWAY\r\n");
+          socketWriteNoEnd(cloud_iface.fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
+          break;
 
-    //     if (*(enable_mode+2)=='1')//if the app works in client model, then send the data back to server
-    //         socketWriteNoEnd(socket_client_interface.socket_fd, receivedData, dataLength+1);   //+1 means sent '/0' together
-    //     break;
-    // case JSON_TYPE_DATA_REPOART:
-    //     printf("jsonType is DATA_REPOART\r\n");
-    //     doDataReport(receivedData);
-    //     break;
-    // case JSON_TYPE_OXYGEN_REPOART:
-    //     printf("jsonType is JSON_TYPE_OXYGEN_REPOART\r\n");
-    //     oxygenFlowReport(receivedData);
-    //     break;
     case JSON_TYPE_WIFI_CONFIG:
         printf("jsonType is JSON_TYPE_WIFI_CONFIG\r\n");
         if (config_wifi(pt_data_info)==-1)
@@ -146,10 +142,12 @@ void doit(PT_Data_Info pt_data_info)
 
         break;
 	case JSON_TYPE_INTERVAL_CONFIG:
+		printf("jsonType is JSON_TYPE_INTERVAL_CONFIG\r\n");
 		oxygenFlowCfgTm(pt_data_info);
 	break;
 
 	case JSON_TYPE_SERVER_CONFIG:
+		printf("jsonType is JSON_TYPE_SERVER_CONFIG\r\n");
 		oxygenFlowCfgServer(pt_data_info);
 	break;
 	

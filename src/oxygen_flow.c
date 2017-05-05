@@ -45,6 +45,7 @@ void oxygenFlowInitTime(long ms)
     value.it_value.tv_sec = ms / 1000;
     value.it_value.tv_usec = ms % 1000 * 1000;
     value.it_interval = value.it_value;
+	DBG("-------system will set the timeinterval to %ld-----\n",value.it_value.tv_sec);
     setitimer(ITIMER_REAL, &value, NULL);
 }
 //------------------------------------------------

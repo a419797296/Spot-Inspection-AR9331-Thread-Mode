@@ -13,19 +13,14 @@ o = s:taboption("wifi", ListValue, "ssid", translate("SSID:"))
 --o.default = 0 
 o.datatype = "uinteger"
 
+max_ssid = luci.sys.exec("uci get spotInspection.ssidList.max_ssid")
+for i=0,max_ssid,1
+do
+	str=string.format("uci get spotInspection.ssidList.ssid%d",i)
+	ssid = luci.sys.exec(str)
+	o:value(i, translate(ssid)) 
+end
 
-str0 = luci.sys.exec("uci get spotInspection.ssidList.ssid0")
-str1 = luci.sys.exec("uci get spotInspection.ssidList.ssid1")
-str2 = luci.sys.exec("uci get spotInspection.ssidList.ssid2")
-str3 = luci.sys.exec("uci get spotInspection.ssidList.ssid3")
-str4 = luci.sys.exec("uci get spotInspection.ssidList.ssid4")
-str5 = luci.sys.exec("uci get spotInspection.ssidList.ssid5")
-o:value(0, translate(str0)) 
-o:value(1, translate(str1)) 
-o:value(2, translate(str2))
-o:value(3, translate(str3)) 
-o:value(4, translate(str4)) 
-o:value(5, translate(str5))
 
 key = s:taboption("wifi", Value, "key", translate("Key:"),"input the wifi key") 
 

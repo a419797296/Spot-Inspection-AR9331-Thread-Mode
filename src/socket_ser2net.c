@@ -17,7 +17,7 @@
 #include "socket_driver.h"
 #include "com_tools.h"
 #include "main.h"
-
+int  allNum=0;
 SOCKET_INTERFACE ser2net_iface; 
 // int ser2net_iface.fd;
 // pthread_t socket_ser2net_threadID;
@@ -75,13 +75,12 @@ static void *ser2net_thread(void *arg)
     char buff[1024]={0};
     char package[SER2NET_PACK_NUMS];
     int  nbyte;
-    int  allNum=0;
+
     bool fullPackaged = 0;
-
-
     pthread_cleanup_push(ser2net_cleanup, "test");
     ser2net_iface.fd = socketConnect(ser2net_iface.ip,ser2net_iface.port); 
-
+	
+	
     if (ser2net_iface.fd == -1)
     {
         printf("----------------can not connect to the ser2net server-------------\n");
@@ -90,14 +89,20 @@ static void *ser2net_thread(void *arg)
     printf("----------------have connect to the ser2net server-------------\n");
     while(1)
     {
-      if((nbyte=read(ser2net_iface.fd,package,1024))<=0)
+	  if((nbyte=read(ser2net_iface.fd,package,1024))<=0)
       {
         printf("ser2net read err---------------\n");
         close(ser2net_iface.fd);
 	ser2net_iface.fd = -1;
         return NULL;
       }  
-      memcpy(buff + allNum, package, nbyte);
+	//  allNum=0;
+	fullPackaged=getDataPkgFromSerial(buff, &allNum,package, nbyte, 0x24, '\n', 100);
+		
+
+
+	  
+     /*memcpy(buff + allNum, package, nbyte);
       allNum += nbyte;
 
 #ifdef SER2NET_END_WITH_NULL
@@ -111,7 +116,7 @@ static void *ser2net_thread(void *arg)
 
       if(buff[0]!=0x16)
       {
-          DBG("first byte error :%x\n",buff[0]);
+          //DBG("first byte error :%x\n",buff[0]);
           allNum = 0;
           // memset(buff, '\0', sizeof(buff));
           continue;
@@ -123,13 +128,12 @@ static void *ser2net_thread(void *arg)
         unsigned char xor=0;
         for(i=0; i<allNum; i++)
         {
-            DBG("%02x ",(unsigned char)buff[i]);
+            //DBG("%02x ",(unsigned char)buff[i]);
             if(i<11)
                 xor-=buff[i];
 
         }
-        DBG("\nthe xor is %02x \n",xor);
-        /*PLOG("\nthe soc is %02x \n",soc);*/
+        //DBG("\nthe xor is %02x \n",xor);
         if(xor==(unsigned char)buff[11])
         {
             fullPackaged =1;
@@ -141,7 +145,7 @@ static void *ser2net_thread(void *arg)
             // memset(buff, '\0', sizeof(buff));
         }
       }
-#endif
+#endif*/
       if(fullPackaged)
       {
         fullPackaged = 0;
