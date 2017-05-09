@@ -15,6 +15,7 @@ then
         SSID=`uci get wireless.sta.ssid`
         key=`uci get wireless.sta.key`
         echo the network have already connected,which SSID is $SSID, key is $key
+	/root/led.sh blink_slow tp-link:blue:system
 	/etc/init.d/spotInspection start
         exit
 fi
@@ -39,6 +40,7 @@ echo "checking sta mode"
                         echo 'the network have already connected'
                         ip=`ifconfig wlan0|awk -F'[ :]+' '/inet addr/{print $4}'`
                         echo "the current ip is $ip"
+			/root/led.sh blink_slow tp-link:blue:system
 			/etc/init.d/spotInspection start
                         exit
                 fi
@@ -48,9 +50,10 @@ echo "checking sta mode"
 
 #-------------------------------------------------if can not connect to the wifi, then change to the ap mode
         echo 'can not connect the wifi, changeing to the ap mode...'
-        uci set wireless.ap.encryption=none
-        uci delete wireless.ap.key
-        echo starting ap without key
+	/root/led.sh blink_fast tp-link:blue:system
+	uci set wireless.ap.encryption=none
+	uci delete wireless.ap.key
+	echo starting ap without key
 
 uci set wireless.ap.ssid="Spot_Inspection"
 uci set wireless.ap.disabled=0

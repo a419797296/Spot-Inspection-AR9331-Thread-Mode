@@ -212,7 +212,7 @@ int getSysUciCfg(char *filename,char *section,char *option,char * result)
         {
             ret = 0;/* code */
             *(result+chars_read-1) = 0;   // the read result include '\n'
-            printf("the read config is %s\n", result);
+            DBG("the read config is %s\n", result);
         }
         else
         {
@@ -273,12 +273,20 @@ int getDataPkgFromSerial(char *conbined_buf, int *conbined_len, char *new_data, 
 	DBG("------%s,data len is %d,------\n",new_data,*conbined_len);
 	memcpy(conbined_buf + *conbined_len, new_data, new_data_len);
 	*conbined_len=*conbined_len+new_data_len;
-	if(end_byte=='\0')
-		{
-		if(new_data[new_data_len-1]!=end_byte)
-			return 1;
+    if(end_byte=='\0')
+        {
+        if(new_data[new_data_len-1]!=end_byte)
+            {
+            if(*conbined_len>max_pkg_len)
+                *conbined_len=0;
+            return 0;
+        }
+        else
+            {
+            return 1;
+        }
 
-	}
+    }
 	else
 		{
 		if(*conbined_len==0)

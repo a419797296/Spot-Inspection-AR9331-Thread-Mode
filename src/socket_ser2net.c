@@ -17,6 +17,7 @@
 #include "socket_driver.h"
 #include "com_tools.h"
 #include "main.h"
+#include "oxygen_flow.h"
 int  allNum=0;
 SOCKET_INTERFACE ser2net_iface; 
 // int ser2net_iface.fd;
@@ -35,7 +36,7 @@ int ser2net_init(void)
     getSysUciCfg("spotInspection","ser2net","port",port);
     ser2net_iface.port = atoi(port);
     ser2net_iface.fd = -1;
-    printf("IP:%s,port:%d\n",ser2net_iface.ip, ser2net_iface.port);
+    DBG("IP:%s,port:%d\n",ser2net_iface.ip, ser2net_iface.port);
     return 0;
 }
 /******************************************************************************
@@ -49,7 +50,7 @@ Return Value: always 0
 int ser2net_stop(pthread_t threadID)
 {
 
-    printf("will cancel ser2net thread #%02d\n", (int)threadID);
+    DBG("will cancel ser2net thread #%02d\n", (int)threadID);
     pthread_cancel(threadID);
 
     return 0;
@@ -64,7 +65,7 @@ int ser2net_run(pthread_t *threadID)
 {
     ser2net_init();
     pthread_create(threadID, NULL, ser2net_thread, (void *)NULL);
-    printf("launching ser2net thread #%02d\n", (int)(*threadID));
+    DBG("launching ser2net thread #%02d\n", (int)(*threadID));
     pthread_detach(*threadID);
 
     return 0;
@@ -83,74 +84,26 @@ static void *ser2net_thread(void *arg)
 	
     if (ser2net_iface.fd == -1)
     {
-        printf("----------------can not connect to the ser2net server-------------\n");
+        DBG("----------------can not connect to the ser2net server-------------\n");
         return NULL;
     }
-    printf("----------------have connect to the ser2net server-------------\n");
+    DBG("----------------have connect to the ser2net server-------------\n");
     while(1)
     {
 	  if((nbyte=read(ser2net_iface.fd,package,1024))<=0)
       {
-        printf("ser2net read err---------------\n");
+        DBG("ser2net read err---------------\n");
         close(ser2net_iface.fd);
 	ser2net_iface.fd = -1;
         return NULL;
       }  
-	//  allNum=0;
-	fullPackaged=getDataPkgFromSerial(buff, &allNum,package, nbyte, 0x24, '\n', 100);
-		
+	fullPackaged=oxygenFlowPackage(buff, &allNum,package, nbyte, 0x16, 12);
 
-
-	  
-     /*memcpy(buff + allNum, package, nbyte);
-      allNum += nbyte;
-
-#ifdef SER2NET_END_WITH_NULL
-      if (package[nbyte - 1] == '\0')   //读到的最后一位不为零, 读取完毕
-      {
-          fullPackaged = 1;
-      }
-#endif
-
-#ifdef SER2NET_END_WITH_LENGTH
-
-      if(buff[0]!=0x16)
-      {
-          //DBG("first byte error :%x\n",buff[0]);
-          allNum = 0;
-          // memset(buff, '\0', sizeof(buff));
-          continue;
-      }       
-        
-      if(allNum >= SER2NET_FIX_LENGTH)
-      {
-        int i=0;
-        unsigned char xor=0;
-        for(i=0; i<allNum; i++)
-        {
-            //DBG("%02x ",(unsigned char)buff[i]);
-            if(i<11)
-                xor-=buff[i];
-
-        }
-        //DBG("\nthe xor is %02x \n",xor);
-        if(xor==(unsigned char)buff[11])
-        {
-            fullPackaged =1;
-		allNum = SER2NET_FIX_LENGTH;
-        }
-        else
-        {
-            allNum = 0;
-            // memset(buff, '\0', sizeof(buff));
-        }
-      }
-#endif*/
       if(fullPackaged)
       {
         fullPackaged = 0;
         buff[allNum] = 0;
-        printf("allNum is %d,read data is %s\n",allNum,buff);
+        DBG("allNum is %d,read data is %s\n",allNum,buff);
 	if(is_time_to_report)
 		{
 	        pthread_mutex_lock(&db);
@@ -177,5 +130,5 @@ Return Value: -
 static void ser2net_cleanup(void *arg)
 {
 
-    printf("cleaning up ressources allocated by ser2net thread: %s\n",(char *)arg);
+    DBG("cleaning up ressources allocated by ser2net thread: %s\n",(char *)arg);
 }

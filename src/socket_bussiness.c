@@ -32,20 +32,9 @@ int socket_bussiness(void)
     {
         pthread_mutex_lock(&db);    
         pthread_cond_wait(&db_update, &db);
-	 /*if(check_connectiong(5) != 0)
-  		system("/root/led.sh blink_fast tp-link:blue:system");	//flash the led if the network is not ready 
-	if(!SocketConnected(cloud_iface.fd))
-		{
-		printf("have not connect to the server");
-		if(check_connectiong(5) == 0)
-			client_run(&cloud_iface.threadID);
-		else
-			printf("please check the network connection");
-	}*/
-		
         printf("recieved the data is %s---------------\n",t_data_info.data);
         doit(&t_data_info);
-		pthread_mutex_unlock( &db );// 原子操作结束
+	pthread_mutex_unlock( &db );// 原子操作结束
 
     }
     return 0;
@@ -113,18 +102,6 @@ void doit(PT_Data_Info pt_data_info)
     case JSON_TYPE_ERROR:
         printf("jsonType is ERROR\r\n");
         break;
-    // case JSON_TYPE_CONTROL_CMD:
-    //     printf("jsonType is CONTROL_CMD\r\n");
-    //     doControlInfo(receivedData);
-    //     break;
-     case JSON_TYPE_GETWAY_TO_ZIGBEE:
-         printf("jsonType is GETWAY_TO_ZIGBEE\r\n");
-         socketWriteNoEnd(ser2net_iface.fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
-         break;
-     case JSON_TYPE_ZIGBEE_TO_GETWAY:
-         printf("jsonType is ZIGBEE_TO_GETWAY\r\n");
-          socketWriteNoEnd(cloud_iface.fd, pt_data_info->data, pt_data_info->length);   //+1 means sent '/0' together
-          break;
 
     case JSON_TYPE_WIFI_CONFIG:
         printf("jsonType is JSON_TYPE_WIFI_CONFIG\r\n");

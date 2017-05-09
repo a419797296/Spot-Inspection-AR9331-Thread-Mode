@@ -97,7 +97,7 @@ extern bool is_time_to_report;
 //   pthread_cond_t  	db_update;
 // }T_Server, *PT_Servrer;
 
-#define DEBUG
+//#define DEBUG
 
 #ifndef DBG
 #ifdef DEBUG

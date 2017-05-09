@@ -100,6 +100,16 @@ define Package/spotInspection/install
 	
 endef
 
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh 
+[ -n "${IPKG_INSTROOT}" ] || {
+	/etc/init.d/spotInspection enable
+	/etc/init.d/spotInspection start
+	touch /root/success
+	echo starting the app ...
+	exit 0
+}
+endef
 
 # This line executes the necessary commands to compile our program.
 # The above define directives specify all the information needed, but this

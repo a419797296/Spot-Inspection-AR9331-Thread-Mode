@@ -64,7 +64,7 @@ Return Value: always 0
 int client_run(pthread_t *threadID)
 {
     client_init();
-	  oxygenFlowRun();
+	  
     pthread_create(threadID, NULL, client_thread, (void *)NULL);
     printf("launching client thread #%02d\n", (int)(*threadID));
     pthread_detach(*threadID);
@@ -82,12 +82,13 @@ static void *client_thread(void *arg)
     if (cloud_iface.fd == -1)
     {
         printf("----------------can not connect to the server-------------\n");
-	system("/root/led.sh blink_slow tp-link:blue:system");	//light on the led
+	system("/root/led.sh blink_slow tp-link:blue:system");	//blink slow the led
         return NULL;
     }
     printf("----------------have connect to the server-------------\n");
 	system("/root/led.sh led_on tp-link:blue:system");	//light on the led
     sendProductInfo(cloud_iface.fd);
+	oxygenFlowRun();
     while(1)
     {
       if((nbyte=read(cloud_iface.fd,buff,1024))<=0)
