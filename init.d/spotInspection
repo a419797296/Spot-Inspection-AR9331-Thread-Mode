@@ -4,19 +4,17 @@
 
 START=99
 
-PROG=/bin/spot_inspection
-NAME=spot_inspection
+PROG=/bin/spotInspection
+NAME=spotInspection
 
 
 start()
 {
-	kill $(pidof spot_inspection)
-	/root/spot_inspection_init.sh
+        kill $(pidof spotInspection_init)
+        /root/spotInspection_init.sh
 }
 
 stop()
 {
-	kill $(pidof spot_inspection)
+        kill $(pidof spotInspection_init)
 }
-
-

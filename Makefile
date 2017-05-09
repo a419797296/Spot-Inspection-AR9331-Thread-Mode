@@ -18,7 +18,7 @@
 include $(TOPDIR)/rules.mk
 # Name and release number of this package
 PKG_NAME:=spotInspection
-PKG_RELEASE:=1
+PKG_RELEASE:=1.3.0
 
 
 # This specifies the directory where we're going to build the program. 
@@ -105,7 +105,6 @@ define Package/$(PKG_NAME)/postinst
 [ -n "${IPKG_INSTROOT}" ] || {
 	/etc/init.d/spotInspection enable
 	/etc/init.d/spotInspection start
-	touch /root/success
 	echo starting the app ...
 	exit 0
 }
