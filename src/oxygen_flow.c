@@ -40,6 +40,7 @@ void oxygenFlowTimer(int sig)
     is_time_to_report = 1;
 #ifdef RESPONSE
 	char oxygen_ask_cmd[4]={0x11,0x01,0x01,0xED};
+	DBG("sending the cmd .......\n");
 	socketWriteNoEnd(ser2net_iface.fd, oxygen_ask_cmd, 4);
 #endif
 }

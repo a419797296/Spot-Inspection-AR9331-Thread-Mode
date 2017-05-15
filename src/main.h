@@ -24,8 +24,8 @@ typedef unsigned char   uint8;
 typedef signed   short  int16;
 typedef unsigned short  uint16;
 
-typedef signed   long   int32;
-typedef unsigned long   uint32;
+typedef signed   int   int32;
+typedef unsigned int   uint32;
 
 typedef unsigned char   bool;
 
@@ -97,7 +97,7 @@ extern bool is_time_to_report;
 //   pthread_cond_t  	db_update;
 // }T_Server, *PT_Servrer;
 
-//#define DEBUG
+#define DEBUG
 
 #ifndef DBG
 #ifdef DEBUG

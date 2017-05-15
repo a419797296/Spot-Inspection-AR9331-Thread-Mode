@@ -21,7 +21,7 @@ then
 fi
 
 echo the input ssid is $ssid, key is $key
-uci set wireless.sta.ssid=$ssid
+uci set wireless.sta.ssid="$ssid"
 uci set wireless.sta.key=$key
 uci set wireless.sta.disabled=0
 uci commit wireless
